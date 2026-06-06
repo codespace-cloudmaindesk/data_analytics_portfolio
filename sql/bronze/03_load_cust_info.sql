@@ -9,3 +9,11 @@ COPY bronze.crm_cust_info (
 )
 FROM '/data/source_crm/cust_info.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',');
+
+COPY bronze.erp_cust_az12 (
+    cid,
+    bdate,
+    gen
+)
+FROM '/data/source_erp/cust_az12.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',');
