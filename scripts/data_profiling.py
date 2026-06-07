@@ -1,7 +1,10 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 import pandas as pd
 import sweetviz as sv
-from config import DATA_DIR, REPORTS_DIR, logger
-
+from scripts.config import DATA_DIR, REPORTS_DIR, logger
 
 DATASETS = {
     "crm_cust_info": DATA_DIR / "source_crm" / "cust_info.csv",
@@ -29,7 +32,7 @@ def generate_report(name, df):
         open_browser=False
     )
 
-    logger.info(f"📄 Saved: {output_file}")
+    logger.info(f"Saved: {output_file}")
 
 
 def run_profile(name, file_path):
