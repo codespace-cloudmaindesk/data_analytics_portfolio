@@ -1,9 +1,14 @@
-CREATE SCHEMA IF NOT EXISTS silver;
-
 CREATE OR REPLACE VIEW silver.crm_cust_info AS
 
 WITH source AS (
-    SELECT *
+    SELECT
+        cst_id,
+        cst_key,
+        cst_first_name,
+        cst_last_name,
+        cst_marital_status,
+        cst_gndr,
+        cst_create_date
     FROM bronze.crm_cust_info
     WHERE cst_id IS NOT NULL
 ),
@@ -45,21 +50,22 @@ standardized AS (
 
 casted AS (
     SELECT
-        NULLIF(cst_id, '')::INT AS customer_id,
-        cst_key AS customer_key,
-        cst_first_name AS first_name,
-        cst_last_name AS last_name,
+        CAST(cst_id AS INT) AS customer_id,
+        CAST(cst_key AS VARCHAR(255)) AS customer_key,
+        CAST(cst_first_name AS VARCHAR(255)) AS first_name,
+        CAST(cst_last_name AS VARCHAR(255)) AS last_name,
         marital_status,
         gender,
-        NULLIF(cst_create_date, '')::DATE AS create_date
+        CAST(cst_create_date AS DATE) AS create_date
     FROM standardized
 ),
 
 deduped AS (
-    SELECT *,
+    SELECT
+        *,
         ROW_NUMBER() OVER (
             PARTITION BY customer_id
-            ORDER BY create_date DESC NULLS LAST
+            ORDER BY create_date DESC
         ) AS rn
     FROM casted
 ),

@@ -1,7 +1,5 @@
 services:
-
   postgres:
-
     image: postgres:16
 
     environment:
@@ -13,4 +11,9 @@ services:
       - ${DB_PORT}:5432
 
     volumes:
+      - pgdata:/var/lib/postgresql/data
       - ./data:/data
+      - ./sql:/sql
+
+volumes:
+  pgdata:
