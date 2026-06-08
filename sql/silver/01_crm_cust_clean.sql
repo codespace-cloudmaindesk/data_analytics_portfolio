@@ -1,4 +1,4 @@
-CREATE OR ALTER VIEW silver.crm_cust_info AS
+CREATE OR REPLACE VIEW silver.crm_cust_info AS
 
 WITH source AS (
     SELECT
