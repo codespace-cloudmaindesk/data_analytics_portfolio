@@ -45,8 +45,8 @@ standardized AS (
 
 casted AS (
     SELECT
-        NULLIF(cst_id, '')::INT AS customer_id,
-        cst_key AS customer_key,
+        NULLIF(cst_id, '')::INT AS customer_key,
+        cst_key AS customer_id,
         cst_first_name AS first_name,
         cst_last_name AS last_name,
         marital_status,
@@ -58,7 +58,7 @@ casted AS (
 deduped AS (
     SELECT *,
         ROW_NUMBER() OVER (
-            PARTITION BY customer_id
+            PARTITION BY customer_key
             ORDER BY create_date DESC NULLS LAST
         ) AS rn
     FROM casted
@@ -85,8 +85,8 @@ data_quality AS (
 )
 
 SELECT
-    customer_id,
     customer_key,
+    customer_id,
     first_name,
     last_name,
     marital_status,

@@ -15,10 +15,14 @@ cleaned AS (
 ),
 standardized AS (
     SELECT 
-        REPLACE(cid, '-', '') AS customer_key,
+        REPLACE(cid, '-', '') AS customer_id,
         CASE
             WHEN cntry IN ('US', 'USA', 'United States') THEN 'United States'
             WHEN cntry IN ('DE', 'Germany') THEN 'Germany'
+            WHEN cntry = 'Australia' THEN 'Australia'
+            WHEN cntry = 'Canada' THEN 'Canada'
+            WHEN cntry = 'France' THEN 'France'
+            WHEN cntry = 'United Kingdom' THEN 'United Kingdom'
             ELSE NULL 
         END AS country
     FROM cleaned
@@ -27,18 +31,18 @@ standardized AS (
 deduped AS (
     SELECT *,
         ROW_NUMBER() OVER (
-            PARTITION BY customer_key
-            ORDER BY customer_key
+            PARTITION BY customer_id
+            ORDER BY customer_id
         ) AS rn
     FROM standardized
 ),
 data_quality AS (
     SELECT *,
-        CASE WHEN customer_key IS NULL THEN 1 ELSE 0 END AS is_missing_customer_key,
+        CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END AS is_missing_customer_id,
         CASE WHEN country IS NULL THEN 1 ELSE 0 END AS is_missing_country,
 
         CASE
-            WHEN customer_key IS NULL
+            WHEN customer_id IS NULL
                 OR country IS NULL
             THEN 'Dirty'
             ELSE 'Clean'
@@ -46,7 +50,7 @@ data_quality AS (
     FROM deduped
 )
 SELECT
-    customer_key,
+    customer_id,
     country,
     dq_status
 FROM data_quality

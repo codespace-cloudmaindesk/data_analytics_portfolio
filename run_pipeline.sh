@@ -30,3 +30,6 @@ echo "Silver Layer Processing Completed..."
 
 # Gold Layer
 echo "Processing Gold Layer..."
+docker exec -i $DB_CONTAINER psql -v ON_ERROR_STOP=1 -U $DB_USER -d $DB_NAME -f sql/gold/01_dim_customers.sql
+
+echo "Gold Layer Processing Completed..."
