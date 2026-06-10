@@ -1,7 +1,10 @@
-from pathlib import Path
 import os
-
+import logging
+from pathlib import Path
 from dotenv import load_dotenv
+
+
+logger = logging.getLogger("ETL Pipeline")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,3 +16,9 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is not set.")
+
+if not logger.handlers:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    )

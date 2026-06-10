@@ -1,5 +1,5 @@
-TRUNCATE TABLE bronze.crm_prod_info;
-COPY bronze.crm_prod_info (
+TRUNCATE TABLE bronze.crm_prd_info;
+COPY bronze.crm_prd_info (
     prd_id,
     prd_key,
     prd_nm,
