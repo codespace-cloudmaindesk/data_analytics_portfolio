@@ -45,6 +45,25 @@ standardized AS (
         start_dt,
         end_dt
     FROM cleaned
+),
+
+deduped AS (
+    SELECT *,
+        ROW_NUMBER() OVER (
+            PARTITION BY product_key
+            ORDER BY start_dt DESC NULLS LAST
+        ) AS rn
+    FROM standardized
 )
 
-SELECT * FROM standardized;
+SELECT
+    product_id,
+    product_key,
+    category_id,
+    product,
+    product_line,
+    cost,
+    start_dt,
+    end_dt
+FROM deduped
+WHERE rn = 1;
