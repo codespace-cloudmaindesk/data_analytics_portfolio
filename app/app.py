@@ -1,20 +1,20 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Analytics App",
-    layout="centered"
+    page_title="Analytics Platform",
+    layout="wide"
 )
 
-st.title("App Under Construction")
+st.title("Sales Analytics Platform")
 
-st.write("""
-This is a placeholder Streamlit app.
-The full dashboard will be added soon.
-""")
+st.markdown(
+    """
+    ### Navigation
 
-st.info("App is running successfully")
+    Use the sidebar to explore:
 
-name = st.text_input("Enter your name (test input):")
-
-if name:
-    st.success(f"Hello {name}, everything is working fine")
+    - Overview
+    - Trends
+    - Details
+    """
+)

@@ -2,6 +2,7 @@ name: data-analytics-pipeline-ci
 
 on:
   push:
+    branches: [ "main" ]
 
 jobs:
 
