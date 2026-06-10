@@ -7,4 +7,4 @@ engine = create_engine(
     pool_pre_ping=True,
     connect_args={"sslmode": os.getenv("DB_SSLMODE", "prefer")}
 )
-logger.info(f"Successfully connected to a database")
+logger.info(f"Database engine initialized")

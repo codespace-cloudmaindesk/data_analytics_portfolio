@@ -28,7 +28,7 @@ st.title("Executive Overview")
 if df.empty:
     st.warning("No data available. Run pipeline or check gold.reporting_mart view.")
 else:
-    total_revenue = df["sales_amount"].sum()
+    total_revenue = df["price"].sum()
     total_orders = df["order_number"].nunique()
     total_customers = df["customer_id"].nunique()
 
