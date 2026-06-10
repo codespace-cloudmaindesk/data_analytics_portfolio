@@ -56,12 +56,16 @@ casted AS (
 ),
 
 deduped AS (
-    SELECT *,
-        ROW_NUMBER() OVER (
-            PARTITION BY customer_key
-            ORDER BY create_date DESC NULLS LAST
-        ) AS rn
+    SELECT DISTINCT ON (customer_key)
+        customer_key,
+        customer_id,
+        first_name,
+        last_name,
+        marital_status,
+        gender,
+        create_date
     FROM casted
+    ORDER BY customer_key, create_date DESC NULLS LAST
 ),
 
 data_quality AS (
@@ -94,5 +98,4 @@ SELECT
     create_date,
     dq_status
 FROM data_quality
-WHERE rn = 1
-  AND dq_status = 'Clean';
+WHERE dq_status = 'Clean';

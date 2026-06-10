@@ -13,9 +13,21 @@ cleaned AS (
         TRIM(sls_ord_num) AS order_number,
         TRIM(sls_prd_key) AS product_key,
         CONCAT('AW', LPAD(TRIM(sls_cust_id), 8, '0')) AS customer_id,
-        NULLIF(TRIM(sls_order_dt), '')::DATE AS order_date,
-        NULLIF(TRIM(sls_ship_dt), '')::DATE AS shipping_date,
-        NULLIF(TRIM(sls_due_dt), '')::DATE AS due_date,
+        CASE 
+            WHEN TRIM(sls_order_dt) !~ '^\d{8}$' 
+                THEN NULL 
+            ELSE TRIM(sls_order_dt)::DATE 
+        END AS order_date,
+        CASE 
+            WHEN TRIM(sls_ship_dt) !~ '^\d{8}$' 
+                THEN NULL 
+            ELSE TRIM(sls_ship_dt)::DATE 
+        END AS shipping_date,
+        CASE 
+            WHEN TRIM(sls_due_dt) !~ '^\d{8}$' 
+                THEN NULL 
+            ELSE TRIM(sls_due_dt)::DATE 
+        END AS due_date,
         NULLIF(TRIM(sls_sales), '')::NUMERIC AS sales_amount,
         NULLIF(TRIM(sls_quantity), '')::NUMERIC AS quantity,
         NULLIF(TRIM(sls_price), '')::NUMERIC AS price

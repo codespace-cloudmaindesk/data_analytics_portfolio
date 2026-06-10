@@ -29,12 +29,11 @@ standardized AS (
 ),
 
 deduped AS (
-    SELECT *,
-        ROW_NUMBER() OVER (
-            PARTITION BY customer_id
-            ORDER BY customer_id
-        ) AS rn
+    SELECT DISTINCT ON (customer_id)
+        customer_id,
+        country
     FROM standardized
+    ORDER BY customer_id
 ),
 data_quality AS (
     SELECT *,
@@ -54,5 +53,4 @@ SELECT
     country,
     dq_status
 FROM data_quality
-WHERE rn = 1
-  AND dq_status = 'Clean';
+WHERE dq_status = 'Clean';

@@ -30,12 +30,13 @@ standardized AS (
 ),
 
 deduped AS (
-    SELECT *,
-        ROW_NUMBER() OVER (
-            PARTITION BY customer_key
-            ORDER BY birth_date DESC NULLS LAST
-        ) AS rn
+    SELECT DISTINCT ON (customer_key)
+        customer_key,
+        customer_id,
+        gender,
+        birth_date
     FROM standardized
+    ORDER BY customer_key, birth_date DESC NULLS LAST
 ),
 
 data_quality AS (
@@ -63,5 +64,4 @@ SELECT
     birth_date,
     dq_status
 FROM data_quality
-WHERE rn = 1
-  AND dq_status = 'Clean';
+WHERE dq_status = 'Clean';
