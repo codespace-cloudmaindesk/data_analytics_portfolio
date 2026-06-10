@@ -11,19 +11,19 @@ def export_gold_to_csv():
     DATA_DIR.mkdir(exist_ok=True)
     
     tables = [
-        "dim_customers",
-        "dim_product",
-        "fact_sales",
-        "reporting_mart"
+        ("dim_customer", "dim_customers"),
+        ("dim_product", "dim_product"),
+        ("fact_sales", "fact_sales"),
+        ("reporting_mart", "reporting_mart")
     ]
     
     print("\nStarting CSV Extraction...")
     with engine.connect() as conn:
-        for table in tables:
-            print(f"Exporting gold.{table} to CSV...")
-            query = text(f"SELECT * FROM gold.{table}")
+        for db_table, csv_name in tables:
+            print(f"Exporting gold.{db_table} to CSV...")
+            query = text(f"SELECT * FROM gold.{db_table}")
             df = pd.read_sql(query, conn)
-            df.to_csv(DATA_DIR / f"{table}.csv", index=False)
+            df.to_csv(DATA_DIR / f"{csv_name}.csv", index=False)
             
     print("CSV Extraction Complete.")
 

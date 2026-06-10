@@ -46,7 +46,7 @@ jobs:
           DB_PORT: 5432
 
       - name: Execute Medallion Pipeline & Extract CSVs
-        run: python scripts/pipeline.py
+        run: python -m scripts.pipeline
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
