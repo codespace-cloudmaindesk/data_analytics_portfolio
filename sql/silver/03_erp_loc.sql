@@ -11,19 +11,26 @@ cleaned AS (
         TRIM(cid) AS cid,
         TRIM(cntry) AS cntry
     FROM source
+),
+
+standardized AS (
+    SELECT
+        REPLACE(cid, '-', '') AS customer_id,
+
+        CASE
+            WHEN UPPER(TRIM(cntry)) IN ('US','USA','UNITED STATES') THEN 'United States'
+            WHEN UPPER(TRIM(cntry)) IN ('DE','GERMANY') THEN 'Germany'
+            WHEN UPPER(TRIM(cntry)) = 'AUSTRALIA' THEN 'Australia'
+            WHEN UPPER(TRIM(cntry)) = 'CANADA' THEN 'Canada'
+            WHEN UPPER(TRIM(cntry)) = 'FRANCE' THEN 'France'
+            WHEN UPPER(TRIM(cntry)) IN ('UK','UNITED KINGDOM','GREAT BRITAIN') THEN 'United Kingdom'
+            ELSE NULL
+        END AS country
+
+    FROM cleaned
 )
 
 SELECT
-    REPLACE(cid, '-', '') AS customer_id,
-
-    CASE
-        WHEN cntry IN ('US','USA','United States') THEN 'United States'
-        WHEN cntry IN ('DE','Germany') THEN 'Germany'
-        WHEN cntry = 'Australia' THEN 'Australia'
-        WHEN cntry = 'Canada' THEN 'Canada'
-        WHEN cntry = 'France' THEN 'France'
-        WHEN cntry = 'United Kingdom' THEN 'United Kingdom'
-        ELSE NULL
-    END AS country
-
-FROM cleaned;
+    customer_id,
+    country
+FROM standardized;

@@ -1,6 +1,6 @@
 streamlit==1.58.0
 python-dotenv==1.2.2
-pandas==1.5.3
+pandas==2.2.2
 numpy==1.26.4
 plotly==6.8.0
 matplotlib==3.10.9
@@ -11,3 +11,4 @@ psycopg2-binary==2.9.12
 tqdm==4.68.2
 requests==2.34.2
 pytest==9.0.3
+sqlparse==0.4.4
