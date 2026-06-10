@@ -7,14 +7,12 @@ st.set_page_config(
 
 st.title("Sales Analytics Platform")
 
-st.markdown(
-    """
-    ### Navigation
+st.markdown("""
+Welcome to the dashboard.
 
-    Use the sidebar to explore:
+Use the navigation menu on the left to access:
 
-    - Overview
-    - Trends
-    - Details
-    """
-)
+- Overview
+- Trends
+- Details
+""")
