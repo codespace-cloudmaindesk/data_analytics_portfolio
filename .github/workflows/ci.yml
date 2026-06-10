@@ -42,3 +42,28 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
+          DB_HOST: localhost
+          DB_PORT: 5432
+
+      - name: Execute Medallion Pipeline & Extract CSVs
+        run: python scripts/pipeline.py
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_HOST: localhost
+          DB_PORT: 5432
+
+      - name: Commit and Push Updated CSVs
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Add explicit files instead of wildcard
+          git add data/reporting_mart.csv
+          git add data/fact_sales.csv
+          git add data/dim_customers.csv
+          git add data/dim_product.csv
+          
+          # Only commit if these specific files actually changed
+          git diff-index --quiet HEAD || (git commit -m "Automated data refresh: updated gold layer CSVs" && git push)

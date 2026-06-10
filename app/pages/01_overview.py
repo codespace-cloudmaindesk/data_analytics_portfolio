@@ -5,7 +5,12 @@ sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 import streamlit as st
 from scripts.queries import get_reporting_mart
 
-df = get_reporting_mart()
+
+@st.cache_data
+def load_data():
+    return get_reporting_mart()
+
+df = load_data()
 
 st.title("Executive Overview")
 

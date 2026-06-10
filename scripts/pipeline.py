@@ -3,6 +3,7 @@ from pathlib import Path
 from sqlalchemy import text
 
 from scripts.database import engine
+from scripts.export_csv import export_gold_to_csv
 
 SQL_DIR = Path("sql")
 
@@ -46,6 +47,7 @@ def run_pipeline():
         run_sql_file(SQL_DIR / file)
 
     print("Pipeline Complete")
+    export_gold_to_csv()
 
 
 if __name__ == "__main__":
