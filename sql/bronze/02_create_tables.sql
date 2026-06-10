@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS bronze.erp_loc_a101 (
 );
 
 ----Create tables in bronze schema related to product data from CRM system ----
-CREATE TABLE IF NOT EXISTS bronze.crm_prod_info (
+CREATE TABLE IF NOT EXISTS bronze.crm_prd_info (
     prd_id TEXT,
     prd_key TEXT,
     prd_nm TEXT,

@@ -2,7 +2,7 @@ CREATE OR REPLACE VIEW silver.crm_prd_info AS
 
 WITH source AS (
     SELECT *
-    FROM bronze.crm_prod_info
+    FROM bronze.crm_prd_info
     WHERE prd_id IS NOT NULL
 ),
 
