@@ -2,7 +2,6 @@ sweetviz
 streamlit
 plotly
 pandas
-dataprep
 seaborn
 matplotlib
 sqlalchemy 
