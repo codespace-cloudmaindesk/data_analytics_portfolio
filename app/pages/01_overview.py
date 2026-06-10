@@ -3,13 +3,12 @@ import pandas as pd
 from scripts.queries import get_reporting_mart
 
 
-@st.cache_data(ttl=300)  # refresh every 5 min (important for DB apps)
+@st.cache_data(ttl=300)
 def load_data():
     try:
         df = get_reporting_mart()
 
-        # basic safety check (prevents runtime crashes)
-        required_cols = {"sales_amount", "order_number", "customer_id"}
+        required_cols = {"price", "order_number", "customer_id"}
 
         if not required_cols.issubset(df.columns):
             st.error(f"Missing required columns: {required_cols - set(df.columns)}")
@@ -29,7 +28,7 @@ st.title("Executive Overview")
 if df.empty:
     st.warning("No data available. Run pipeline or check gold.reporting_mart view.")
 else:
-    total_revenue = df["sales_amount"].sum()
+    total_revenue = df["price"].sum()
     total_orders = df["order_number"].nunique()
     total_customers = df["customer_id"].nunique()
 

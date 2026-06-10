@@ -30,6 +30,5 @@ def run_pipeline():
 
     print("Pipeline Complete")
 
-
 if __name__ == "__main__":
     run_pipeline()

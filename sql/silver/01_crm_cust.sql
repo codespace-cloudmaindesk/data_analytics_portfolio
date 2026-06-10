@@ -43,17 +43,26 @@ standardized AS (
 
 casted AS (
     SELECT
-        NULLIF(cst_id,'')::INT AS customer_key,
+        NULLIF(TRIM(cst_id), '')::INT AS customer_key,
         cst_key AS customer_id,
         cst_first_name AS first_name,
         cst_last_name AS last_name,
         marital_status,
         gender,
-        NULLIF(cst_create_date,'')::DATE AS create_date
+        NULLIF(TRIM(cst_create_date), '')::DATE AS create_date
     FROM standardized
+),
+
+deduped AS (
+    SELECT *,
+        ROW_NUMBER() OVER (
+            PARTITION BY customer_key
+            ORDER BY create_date DESC NULLS LAST
+        ) AS rn
+    FROM casted
 )
 
-SELECT DISTINCT ON (customer_key)
+SELECT
     customer_key,
     customer_id,
     first_name,
@@ -61,5 +70,5 @@ SELECT DISTINCT ON (customer_key)
     marital_status,
     gender,
     create_date
-FROM casted
-ORDER BY customer_key, create_date DESC NULLS LAST;
+FROM deduped
+WHERE rn = 1;

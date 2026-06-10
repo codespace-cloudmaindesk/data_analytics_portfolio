@@ -1,12 +1,13 @@
 CREATE SCHEMA IF NOT EXISTS gold;
 
+DROP VIEW IF EXISTS gold.reporting_mart;
+
 CREATE OR REPLACE VIEW gold.reporting_mart AS
 SELECT
     f.order_number,
     f.order_date,
-    f.sales_amount,
-    f.quantity,
     f.price,
+    f.quantity,
     p.category,
     c.country,
     c.customer_id,

@@ -17,6 +17,7 @@ cleaned AS (
 standardized AS (
     SELECT
         CAST(NULLIF(REGEXP_REPLACE(cid, '\D', '', 'g'), '') AS INT) AS customer_key,
+
         REPLACE(cid, 'NAS', '') AS customer_id,
 
         CASE
@@ -25,14 +26,23 @@ standardized AS (
             ELSE NULL
         END AS gender,
 
-        NULLIF(TRIM(bdate), '')::DATE AS birth_date
+        NULLIF(bdate, '')::DATE AS birth_date
     FROM cleaned
+),
+
+deduped AS (
+    SELECT *,
+        ROW_NUMBER() OVER (
+            PARTITION BY customer_key
+            ORDER BY birth_date DESC NULLS LAST
+        ) AS rn
+    FROM standardized
 )
 
-SELECT DISTINCT ON (customer_key)
+SELECT
     customer_key,
     customer_id,
     gender,
     birth_date
-FROM standardized
-ORDER BY customer_key, birth_date DESC NULLS LAST;
+FROM deduped
+WHERE rn = 1;
