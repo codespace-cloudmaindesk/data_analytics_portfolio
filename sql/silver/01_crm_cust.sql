@@ -1,5 +1,3 @@
-CREATE SCHEMA IF NOT EXISTS silver;
-
 CREATE OR REPLACE VIEW silver.crm_cust_info AS
 
 WITH source AS (
@@ -28,8 +26,8 @@ standardized AS (
         cst_last_name,
 
         CASE
-            WHEN cst_marital_status IN ('M', 'Married') THEN 'Married'
-            WHEN cst_marital_status IN ('S', 'Single') THEN 'Single'
+            WHEN cst_marital_status IN ('M','Married') THEN 'Married'
+            WHEN cst_marital_status IN ('S','Single') THEN 'Single'
             ELSE NULL
         END AS marital_status,
 
@@ -45,57 +43,23 @@ standardized AS (
 
 casted AS (
     SELECT
-        NULLIF(cst_id, '')::INT AS customer_key,
+        NULLIF(cst_id,'')::INT AS customer_key,
         cst_key AS customer_id,
         cst_first_name AS first_name,
         cst_last_name AS last_name,
         marital_status,
         gender,
-        NULLIF(cst_create_date, '')::DATE AS create_date
+        NULLIF(cst_create_date,'')::DATE AS create_date
     FROM standardized
-),
-
-deduped AS (
-    SELECT DISTINCT ON (customer_key)
-        customer_key,
-        customer_id,
-        first_name,
-        last_name,
-        marital_status,
-        gender,
-        create_date
-    FROM casted
-    ORDER BY customer_key, create_date DESC NULLS LAST
-),
-
-data_quality AS (
-    SELECT *,
-        CASE WHEN first_name IS NULL THEN 1 ELSE 0 END AS is_missing_first_name,
-        CASE WHEN last_name IS NULL THEN 1 ELSE 0 END AS is_missing_last_name,
-        CASE WHEN marital_status IS NULL THEN 1 ELSE 0 END AS is_invalid_marital_status,
-        CASE WHEN gender IS NULL THEN 1 ELSE 0 END AS is_invalid_gender,
-        CASE WHEN create_date IS NULL THEN 1 ELSE 0 END AS is_missing_create_date,
-
-        CASE
-            WHEN first_name IS NULL
-              OR last_name IS NULL
-              OR marital_status IS NULL
-              OR gender IS NULL
-              OR create_date IS NULL
-            THEN 'Dirty'
-            ELSE 'Clean'
-        END AS dq_status
-    FROM deduped
 )
 
-SELECT
+SELECT DISTINCT ON (customer_key)
     customer_key,
     customer_id,
     first_name,
     last_name,
     marital_status,
     gender,
-    create_date,
-    dq_status
-FROM data_quality
-WHERE dq_status = 'Clean';
+    create_date
+FROM casted
+ORDER BY customer_key, create_date DESC NULLS LAST;

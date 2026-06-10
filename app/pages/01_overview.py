@@ -23,7 +23,7 @@ df = load_data()
 st.title("Executive Overview")
 
 if df.empty:
-    st.warning("No data available. Please generate reporting_mart.csv first.")
+    st.warning("No data available run the pipeline.py first")
 else:
     total_revenue = df["sales_amount"].sum()
     total_orders = df["order_number"].nunique()
@@ -41,4 +41,4 @@ else:
         st.metric("Customers", f"{total_customers:,}")
 
     st.markdown("### Sample Data")
-    st.dataframe(df.head(), use_container_width=True)
+    st.dataframe(df.head(), width="stretch")
