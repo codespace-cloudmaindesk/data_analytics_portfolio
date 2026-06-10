@@ -3,29 +3,13 @@ name: data-analytics-pipeline-ci
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-
   test:
 
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16
-
-        env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
@@ -34,13 +18,17 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: pip install --upgrade pip setuptools wheel
-      - run: pip install -r requirements.txt
-          
-      - run: pytest
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Run ETL Pipeline
         env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_HOST: localhost
-          DB_PORT: 5432
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python -m scripts.pipeline
+
+      - name: Run tests
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: pytest

@@ -1,18 +1,22 @@
-from pathlib import Path
 import streamlit as st
 import pandas as pd
-
-ROOT_DIR = Path(__file__).resolve().parents[2]
-DATA_FILE = ROOT_DIR / "data" / "reporting_mart.csv"
+from scripts.queries import get_reporting_mart
 
 
-@st.cache_data
+@st.cache_data(ttl=300)  # refresh every 5 min (important for DB apps)
 def load_data():
-    if not DATA_FILE.exists():
-        return pd.DataFrame()
-
     try:
-        return pd.read_csv(DATA_FILE)
+        df = get_reporting_mart()
+
+        # basic safety check (prevents runtime crashes)
+        required_cols = {"sales_amount", "order_number", "customer_id"}
+
+        if not required_cols.issubset(df.columns):
+            st.error(f"Missing required columns: {required_cols - set(df.columns)}")
+            return pd.DataFrame()
+
+        return df
+
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
@@ -23,7 +27,7 @@ df = load_data()
 st.title("Executive Overview")
 
 if df.empty:
-    st.warning("No data available run the pipeline.py first")
+    st.warning("No data available. Run pipeline or check gold.reporting_mart view.")
 else:
     total_revenue = df["sales_amount"].sum()
     total_orders = df["order_number"].nunique()
