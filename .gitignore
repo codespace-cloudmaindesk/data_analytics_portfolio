@@ -221,4 +221,4 @@ __marimo__/
 data/*
 !data/source_crm/
 !data/source_erp/
-
+!data/*.csv
