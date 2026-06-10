@@ -22,16 +22,17 @@ standardized AS (
     SELECT
         product_id,
 
-        REGEXP_REPLACE(product_key, '^[^-]+-[^-]+-', '') AS product_key,
+        REGEXP_REPLACE(
+            product_key,
+            '^[^-]+-[^-]+-', ''
+        ) AS product_key,
 
         CONCAT(
             SPLIT_PART(product_key, '-', 1),
             '_',
             SPLIT_PART(product_key, '-', 2)
         ) AS category_id,
-
         product,
-
         CASE
             WHEN product_line = 'M' THEN 'Mountain'
             WHEN product_line = 'R' THEN 'Road'
@@ -44,6 +45,25 @@ standardized AS (
         start_dt,
         end_dt
     FROM cleaned
+),
+
+deduped AS (
+    SELECT *,
+        ROW_NUMBER() OVER (
+            PARTITION BY product_key
+            ORDER BY start_dt DESC NULLS LAST
+        ) AS rn
+    FROM standardized
 )
 
-SELECT * FROM standardized;
+SELECT
+    product_id,
+    product_key,
+    category_id,
+    product,
+    product_line,
+    cost,
+    start_dt,
+    end_dt
+FROM deduped
+WHERE rn = 1;
