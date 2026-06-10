@@ -27,11 +27,10 @@ standardized AS (
             '^[^-]+-[^-]+-', ''
         ) AS product_key,
 
-        CONCAT(
-            SPLIT_PART(product_key, '-', 1),
-            '_',
-            SPLIT_PART(product_key, '-', 2)
-        ) AS category_id,
+        CASE
+            WHEN CONCAT(SPLIT_PART(product_key, '-', 1), '_', SPLIT_PART(product_key, '-', 2)) = 'CO_PE' THEN 'CO_PD'
+            ELSE CONCAT(SPLIT_PART(product_key, '-', 1), '_', SPLIT_PART(product_key, '-', 2))
+        END AS category_id,
         product,
         CASE
             WHEN product_line = 'M' THEN 'Mountain'
