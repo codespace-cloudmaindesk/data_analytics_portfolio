@@ -15,9 +15,9 @@ WITH base AS (
         (f.shipping_date - f.order_date) AS shipping_days
     FROM gold.fact_sales f
     LEFT JOIN gold.dim_product p
-        ON f.product_key = p.product_id
+        ON f.product_key = p.product_key
     LEFT JOIN gold.dim_customer c
-        ON f.customer_key = c.customer_id
+        ON f.customer_key = c.customer_key
 )
 
 SELECT
