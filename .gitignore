@@ -218,4 +218,6 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Data folder
-data/
+/data/*
+!/data/source_crm/
+!/data/source_erp/
