@@ -1,16 +1,48 @@
 import pandas as pd
-from pathlib import Path
+from sqlalchemy import text
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+from scripts.database import engine
+
 
 def get_reporting_mart():
-    return pd.read_csv(DATA_DIR / "reporting_mart.csv")
+
+    query = """
+    SELECT *
+    FROM gold.reporting_mart
+    """
+
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
+
 
 def get_fact_sales():
-    return pd.read_csv(DATA_DIR / "fact_sales.csv")
+
+    query = """
+    SELECT *
+    FROM gold.fact_sales
+    """
+
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
+
 
 def get_dim_customer():
-    return pd.read_csv(DATA_DIR / "dim_customers.csv")
+
+    query = """
+    SELECT *
+    FROM gold.dim_customer
+    """
+
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
+
 
 def get_dim_product():
-    return pd.read_csv(DATA_DIR / "dim_product.csv")
+
+    query = """
+    SELECT *
+    FROM gold.dim_product
+    """
+
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)

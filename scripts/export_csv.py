@@ -3,11 +3,9 @@ from sqlalchemy import text
 from pathlib import Path
 from scripts.database import engine
 
-# Define the data directory at the root of your project
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 def export_gold_to_csv():
-    # Ensure the data directory exists
     DATA_DIR.mkdir(exist_ok=True)
     
     tables = [
