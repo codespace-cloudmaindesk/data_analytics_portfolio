@@ -10,14 +10,14 @@ WITH source AS (
 
 cleaned AS (
     SELECT
-        TRIM(id) AS product_key,
+        TRIM(id) AS category_id,
         TRIM(cat) AS category,
         TRIM(subcat) AS subcategory,
         TRIM(maintenance) AS maintenance
     FROM source
 )
 SELECT
-    product_key,
+    category_id,
     category,
     subcategory,
     maintenance

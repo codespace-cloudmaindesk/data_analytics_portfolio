@@ -12,7 +12,7 @@ cleaned AS (
     SELECT
         TRIM(sls_ord_num) AS order_number,
         TRIM(sls_prd_key) AS product_key,
-        TRIM(sls_cust_id) AS customer_id,
+        CONCAT('AW', LPAD(TRIM(sls_cust_id), 8, '0')) AS customer_id,
         NULLIF(TRIM(sls_order_dt), '')::DATE AS order_date,
         NULLIF(TRIM(sls_ship_dt), '')::DATE AS shipping_date,
         NULLIF(TRIM(sls_due_dt), '')::DATE AS due_date,

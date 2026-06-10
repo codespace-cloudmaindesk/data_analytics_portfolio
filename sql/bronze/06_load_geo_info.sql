@@ -1,3 +1,4 @@
+TRUNCATE TABLE bronze.erp_loc_a101;
 COPY bronze.erp_loc_a101 (
     cid,
     cntry

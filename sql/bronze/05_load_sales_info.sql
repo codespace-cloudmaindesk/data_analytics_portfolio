@@ -1,3 +1,4 @@
+TRUNCATE TABLE bronze.crm_sales_details;
 COPY bronze.crm_sales_details (
     sls_ord_num,
     sls_prd_key,
