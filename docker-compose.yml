@@ -32,11 +32,15 @@ services:
     ports:
       - "${STREAMLIT_PORT}:8501"
 
+    volumes:
+      - .:/app
+
     depends_on:
       postgres:
         condition: service_healthy
 
     environment:
+      PYTHONPATH: /app
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: ${DB_NAME}

@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy import text
 
 from scripts.database import engine
 
@@ -10,7 +11,8 @@ def get_reporting_mart():
     FROM gold.reporting_mart
     """
 
-    return pd.read_sql(query, engine)
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
 
 
 def get_fact_sales():
@@ -20,7 +22,8 @@ def get_fact_sales():
     FROM gold.fact_sales
     """
 
-    return pd.read_sql(query, engine)
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
 
 
 def get_dim_customer():
@@ -30,7 +33,8 @@ def get_dim_customer():
     FROM gold.dim_customer
     """
 
-    return pd.read_sql(query, engine)
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
 
 
 def get_dim_product():
@@ -40,4 +44,5 @@ def get_dim_product():
     FROM gold.dim_product
     """
 
-    return pd.read_sql(query, engine)
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)

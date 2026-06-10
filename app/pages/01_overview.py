@@ -1,5 +1,8 @@
-import streamlit as st
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 
+import streamlit as st
 from scripts.queries import get_reporting_mart
 
 df = get_reporting_mart()
@@ -27,4 +30,4 @@ col3.metric(
     f"{total_customers:,}"
 )
 
-st.dataframe(df.head(20))
+st.dataframe(df.head(5))
