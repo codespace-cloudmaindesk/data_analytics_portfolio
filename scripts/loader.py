@@ -1,4 +1,5 @@
 import re
+import sqlparse
 from pathlib import Path
 from typing import List, Tuple, Optional
 from sqlalchemy import text
@@ -24,8 +25,7 @@ def load_sql_file(relative_path: str) -> str:
 
 
 def split_statements(sql: str) -> List[str]:
-    return [s.strip() for s in sql.split(";") if s.strip()]
-
+    return [str(stmt).strip() for stmt in sqlparse.split(sql) if str(stmt).strip()]
 
 def parse_copy_statement(statement: str) -> Optional[Tuple[str, str, str]]:
     match = COPY_PATTERN.search(statement)
@@ -35,7 +35,9 @@ def parse_copy_statement(statement: str) -> Optional[Tuple[str, str, str]]:
 
 
 def resolve_csv_path(csv_path: str) -> Path:
-    cleaned = csv_path.replace("/data/", "")
+    if not csv_path.startswith("/data/"):
+        raise ValueError(f"Expected CSV path to start with '/data/', got: {csv_path}")
+    cleaned = csv_path[len("/data/"):]
     return DATA_DIR / cleaned
 
 
